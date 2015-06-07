@@ -13,8 +13,7 @@ import java.util.regex.Pattern;
 
 public class TemplateLineFromRawLine extends Interpreter<RawLine, TemplateLine> {
 
-	// TODO unit test
-
+	// TODO test further line types
 	@Override
 	protected TemplateLine interpretImpl(RawLine input)
 			throws InterpretationFailedException {
@@ -61,7 +60,7 @@ public class TemplateLineFromRawLine extends Interpreter<RawLine, TemplateLine> 
 							input.getNumber());
 				}
 				try {
-					pattern = Pattern.compile(p);
+					pattern = Pattern.compile(p); // TODO ? MULTILINE FLAG?
 				} catch (Exception e) {
 					produceException("Pattern is invalid in line %d. %s",
 							input.getNumber(), e.getMessage());
@@ -71,7 +70,7 @@ public class TemplateLineFromRawLine extends Interpreter<RawLine, TemplateLine> 
 				return fromOrTillClass.getConstructor(RawLine.class,
 						Pattern.class).newInstance(input, pattern);
 			} catch (Exception e) {
-				produceException("Implementation fail. %s", e.getMessage());
+				produceException("Implementation fail: %s", e.getMessage());
 				return null;
 			}
 		} else {

@@ -1,4 +1,4 @@
-package hu.juranyi.zsolt.rte;
+package hu.juranyi.zsolt.rte.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +34,12 @@ public class Log {
 	}
 
 	public static void setLogLevel(Class<?> clazz, Level level) {
+		setLogLevel(clazz.getName(), level);
+	}
+
+	public static void setLogLevel(String prefix, Level level) {
 		System.getProperties().setProperty(
-				SimpleLogger.LOG_KEY_PREFIX + clazz.getName(),
+				SimpleLogger.LOG_KEY_PREFIX + prefix,
 				level.name().toLowerCase());
 	}
 

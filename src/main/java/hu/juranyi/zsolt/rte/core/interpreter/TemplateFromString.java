@@ -13,11 +13,12 @@ import java.util.Stack;
 
 public class TemplateFromString extends Interpreter<String, Template> {
 
-	private Stack<FromTillUnit> ftuStack;
+	// TODO unit test
+
+	private final Stack<FromTillUnit> ftuStack = new Stack<FromTillUnit>();
 
 	private void handleFromLine(int number, FromLine fromLine) {
-		FromTillUnit ftu = new FromTillUnit();
-		ftu.setFromLine(fromLine);
+		FromTillUnit ftu = new FromTillUnit(fromLine);
 		ftuStack.peek().getUnits().add(ftu);
 		ftuStack.push(ftu);
 	}
@@ -38,9 +39,9 @@ public class TemplateFromString extends Interpreter<String, Template> {
 	}
 
 	private void initializeStack() {
-		ftuStack = new Stack<FromTillUnit>();
-		FromTillUnit ftu = new FromTillUnit();
-		ftu.setFromLine(new FromLine(new RawLine(0, "@FROM"), null));
+		ftuStack.clear();
+		FromTillUnit ftu = new FromTillUnit(new FromLine(
+				new RawLine(0, "@FROM"), null));
 		ftu.setTillLine(new TillLine(new RawLine(0, "@TILL"), null));
 		ftuStack.push(ftu);
 	}
@@ -94,8 +95,7 @@ public class TemplateFromString extends Interpreter<String, Template> {
 			throws InterpretationFailedException {
 		if (null == ftuStack) {
 			produceException("Implementation fail: FTU stack is not initialized.");
-		}
-		if (ftuStack.isEmpty()) {
+		} else if (ftuStack.isEmpty()) {
 			produceException(
 					"Implementation fail: FTU stack is empty at line %d",
 					number);

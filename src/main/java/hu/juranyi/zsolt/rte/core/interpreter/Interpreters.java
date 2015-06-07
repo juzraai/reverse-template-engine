@@ -70,11 +70,4 @@ public class Interpreters {
 		registerInterpreter(RawLine.class, TemplateLine.class,
 				new TemplateLineFromRawLine());
 	}
-
-	// public static Interpreter<String, Template> templateFromString = new
-	// TemplateFromString();
-
-	// public static Interpreter<RawLine, TemplateLine> templateLineFromRawLine
-	// = new TemplateLineFromRawLine();
-
 }

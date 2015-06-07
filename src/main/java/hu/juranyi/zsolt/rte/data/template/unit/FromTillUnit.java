@@ -1,6 +1,7 @@
 package hu.juranyi.zsolt.rte.data.template.unit;
 
 import hu.juranyi.zsolt.rte.data.template.line.FromLine;
+import hu.juranyi.zsolt.rte.data.template.line.TemplateLine;
 import hu.juranyi.zsolt.rte.data.template.line.TillLine;
 
 import java.util.ArrayList;
@@ -8,12 +9,15 @@ import java.util.List;
 
 public class FromTillUnit extends TemplateUnit {
 
-	private FromLine fromLine;
 	private TillLine tillLine;
 	private final List<TemplateUnit> units = new ArrayList<TemplateUnit>();
 
+	public FromTillUnit(TemplateLine templateLine) {
+		super(templateLine);
+	}
+
 	public FromLine getFromLine() {
-		return fromLine;
+		return (FromLine) super.getTemplateLine();
 	}
 
 	public TillLine getTillLine() {
@@ -24,18 +28,14 @@ public class FromTillUnit extends TemplateUnit {
 		return units;
 	}
 
-	public void setFromLine(FromLine fromLine) {
-		this.fromLine = fromLine;
-	}
-
 	public void setTillLine(TillLine tillLine) {
 		this.tillLine = tillLine;
 	}
 
 	@Override
 	public String toString() {
-		return "FromTillUnit [fromLine=" + fromLine + ", tillLine=" + tillLine
-				+ ", units=" + units + ", toString()=" + super.toString() + "]";
+		return "FromTillUnit [tillLine=" + tillLine + ", units=" + units
+				+ ", toString()=" + super.toString() + "]";
 	}
 
 }

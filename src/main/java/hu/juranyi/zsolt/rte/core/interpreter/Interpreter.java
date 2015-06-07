@@ -1,6 +1,6 @@
 package hu.juranyi.zsolt.rte.core.interpreter;
 
-import hu.juranyi.zsolt.rte.Log;
+import hu.juranyi.zsolt.rte.util.Log;
 
 import org.slf4j.Logger;
 

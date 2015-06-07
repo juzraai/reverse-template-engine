@@ -1,15 +1,29 @@
 package hu.juranyi.zsolt.rte.data.template.unit;
 
-public abstract class TemplateUnit {
-	private final String unitType = this.getClass().getSimpleName();
+import hu.juranyi.zsolt.rte.data.template.line.TemplateLine;
 
-	public String getUnitType() {
-		return unitType;
+public abstract class TemplateUnit {
+	private final TemplateLine templateLine;
+	private final String id;
+
+	public TemplateUnit(TemplateLine templateLine) {
+		this.templateLine = templateLine;
+		this.id = this.getClass().getSimpleName() + " @ line "
+				+ templateLine.getRawLine().getNumber();
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public TemplateLine getTemplateLine() {
+		return templateLine;
 	}
 
 	@Override
 	public String toString() {
-		return "TemplateUnit [unitType=" + unitType + "]";
+		return "TemplateUnit [templateLine=" + templateLine + ", id=" + id
+				+ "]";
 	}
 
 }
