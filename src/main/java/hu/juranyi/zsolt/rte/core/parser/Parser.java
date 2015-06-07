@@ -7,17 +7,13 @@ import hu.juranyi.zsolt.rte.data.template.unit.FromTillUnit;
 import hu.juranyi.zsolt.rte.data.template.unit.TemplateUnit;
 
 import java.util.List;
-import java.util.Stack;
 
 public class Parser extends Component {
 
-	// TODO variable storages
-
-	// TODO ??? merge State POJO > Scope POJO, State = scopes + vars
-	private final Stack<State> states = new Stack<State>();
+	private State state;
 
 	private String ftuId() {
-		return ftuId(states.peek().getFtu());
+		return ftuId(state.getScopes().peek().getFtu());
 	}
 
 	private String ftuId(FromTillUnit ftu) {
@@ -27,54 +23,50 @@ public class Parser extends Component {
 	public void parse(String input, Template template)
 			throws ParseFailedException {
 		validate(input, template);
-		// TODO figure out return type
-		// TODO initialize variable storages
-		states.clear();
-		pushState(template.getRoot(), input);
-		while (!states.isEmpty()) {
-			processCurrentState(input);
+		state = new State(input);
+		Scope scope = new Scope(template.getRoot(), 0, input.length());
+		state.getScopes().push(scope);
+		while (!state.getScopes().isEmpty()) {
+			processCurrentScope();
 		}
-		// TODO produce output
+		// TODO produce output, return output vars from state. type?!
 	}
 
-	private void processCurrentState(String input) {
-		State state = states.peek();
-		List<TemplateUnit> units = state.getFtu().getUnits();
-		int next = state.getNextUnitIndex();
+	private void processCurrentScope() {
+		Scope scope = state.getScopes().peek();
+		List<TemplateUnit> units = scope.getFtu().getUnits();
+		int next = scope.getNextUnit();
 		if (next >= units.size()) {
 			LOG.info("[POP] Processing completed of {}", ftuId());
-			states.pop();
-			if (states.isEmpty()) {
+			state.getScopes().pop();
+			if (state.getScopes().isEmpty()) {
 				LOG.info("Parsing completed.");
 			} else {
 				LOG.info("[PEEK] Processing {}", ftuId());
 			}
 		} else {
-			processCurrentUnit(units.get(next), input);
-			state.setNextUnitIndex(++next);
+			processCurrentUnit(units.get(next));
+			scope.setNextUnit(++next);
 		}
 	}
 
-	private void processCurrentUnit(TemplateUnit templateUnit, String input) {
+	private void processCurrentUnit(TemplateUnit templateUnit) {
 		if (templateUnit instanceof FromTillUnit) {
-			pushState((FromTillUnit) templateUnit, input);
+			pushState((FromTillUnit) templateUnit);
 		} else {
 			LOG.info("Processing {} ({})", templateUnit.getId(), ftuId());
 			// TODO else process unit (command, pattern)
 		}
 	}
 
-	private void pushState(FromTillUnit ftu, String input) {
-		// XXX variable insertion into ftu.from.pattern should be here
-		ScopeFinder sf = Components.getComponent(ScopeFinder.class);
-		Scope scope = sf.find(null, ftu, input);
+	private void pushState(FromTillUnit ftu) {
+		Scope scope = Components.getComponent(PatternProcessor.class)
+				.findScope(ftu, state);
 		if (null == scope) {
 			LOG.info("[SKIP] Skipping {}, scope not found.", ftuId(ftu));
 		} else {
-			State state = new State(ftu, scope);
-			states.push(state);
+			state.getScopes().push(scope);
 			LOG.info("[PUSH] Processing {}", ftuId());
-			// XXX extracting values from header can be here
 		}
 	}
 

@@ -1,34 +1,24 @@
 package hu.juranyi.zsolt.rte.data.parser;
 
-import hu.juranyi.zsolt.rte.data.template.unit.FromTillUnit;
+import java.util.Stack;
 
 public class State {
 
-	private final FromTillUnit ftu;
-	private final Scope scope;
-	private int nextUnitIndex = 0;
+	private final String input;
+	private final Stack<Scope> scopes = new Stack<Scope>();
 
-	public State(FromTillUnit ftu, Scope scope) {
-		this.ftu = ftu;
-		this.scope = scope;
+	// TODO inner & output variables (initialize here)
+
+	public State(String input) {
+		this.input = input;
 	}
 
-	public FromTillUnit getFtu() {
-		return ftu;
+	public String getInput() {
+		return input;
 	}
 
-	public int getNextUnitIndex() {
-		return nextUnitIndex;
-	}
-
-	public void setNextUnitIndex(int nextUnitIndex) {
-		this.nextUnitIndex = nextUnitIndex;
-	}
-
-	@Override
-	public String toString() {
-		return "State [ftu=" + ftu + ", scope=" + scope + ", nextUnitIndex="
-				+ nextUnitIndex + "]";
+	public Stack<Scope> getScopes() {
+		return scopes;
 	}
 
 }

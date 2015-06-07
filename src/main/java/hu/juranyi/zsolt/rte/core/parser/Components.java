@@ -18,6 +18,6 @@ public class Components {
 
 	static {
 		registerComponent(Parser.class, new Parser());
-		registerComponent(ScopeFinder.class, new ScopeFinder());
+		registerComponent(PatternProcessor.class, new PatternProcessor());
 	}
 }
