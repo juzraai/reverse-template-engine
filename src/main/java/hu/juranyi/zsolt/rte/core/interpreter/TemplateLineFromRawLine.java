@@ -60,7 +60,7 @@ public class TemplateLineFromRawLine extends Interpreter<RawLine, TemplateLine> 
 							input.getNumber());
 				}
 				try {
-					pattern = Pattern.compile(p); // TODO ? MULTILINE FLAG?
+					pattern = Pattern.compile(p);
 				} catch (Exception e) {
 					produceException("Pattern is invalid in line %d. %s",
 							input.getNumber(), e.getMessage());

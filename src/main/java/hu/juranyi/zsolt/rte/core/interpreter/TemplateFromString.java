@@ -3,10 +3,12 @@ package hu.juranyi.zsolt.rte.core.interpreter;
 import hu.juranyi.zsolt.rte.data.template.Template;
 import hu.juranyi.zsolt.rte.data.template.line.FromLine;
 import hu.juranyi.zsolt.rte.data.template.line.NoteLine;
+import hu.juranyi.zsolt.rte.data.template.line.PatternLine;
 import hu.juranyi.zsolt.rte.data.template.line.RawLine;
 import hu.juranyi.zsolt.rte.data.template.line.TemplateLine;
 import hu.juranyi.zsolt.rte.data.template.line.TillLine;
 import hu.juranyi.zsolt.rte.data.template.unit.FromTillUnit;
+import hu.juranyi.zsolt.rte.data.template.unit.PatternUnit;
 import hu.juranyi.zsolt.rte.data.template.unit.SequentialUnit;
 
 import java.util.Stack;
@@ -24,9 +26,14 @@ public class TemplateFromString extends Interpreter<String, Template> {
 	}
 
 	private void handleOtherLine(int number, TemplateLine templateLine) {
-		// TODO sequential unit will b abstract due to specialization!
-		SequentialUnit su = new SequentialUnit(templateLine);
-		ftuStack.peek().getUnits().add(su);
+		SequentialUnit su = null;
+		if (templateLine instanceof PatternLine) {
+			su = new PatternUnit((PatternLine) templateLine);
+		} // TODO else other line types, e.g. CommandLine impls
+
+		if (null != su) {
+			ftuStack.peek().getUnits().add(su);
+		}
 	}
 
 	private void handleTillLine(int number, TillLine tillLine)

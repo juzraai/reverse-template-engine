@@ -4,6 +4,7 @@ import hu.juranyi.zsolt.rte.data.parser.Scope;
 import hu.juranyi.zsolt.rte.data.parser.State;
 import hu.juranyi.zsolt.rte.data.template.Template;
 import hu.juranyi.zsolt.rte.data.template.unit.FromTillUnit;
+import hu.juranyi.zsolt.rte.data.template.unit.PatternUnit;
 import hu.juranyi.zsolt.rte.data.template.unit.TemplateUnit;
 
 import java.util.List;
@@ -55,7 +56,12 @@ public class Parser extends Component {
 			pushState((FromTillUnit) templateUnit);
 		} else {
 			LOG.info("Processing {} ({})", templateUnit.getId(), ftuId());
-			// TODO else process unit (command, pattern)
+			if (templateUnit instanceof PatternUnit) {
+				PatternUnit pu = (PatternUnit) templateUnit;
+				Components.getComponent(PatternProcessor.class).processPattern(
+						pu.getPatternLine().getPattern(), state);
+			}
+			// TODO else CommandUnit
 		}
 	}
 
